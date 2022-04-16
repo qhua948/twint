@@ -59,6 +59,14 @@ user_agent_list = [
 ]
 
 
+class ContainerState:
+    COOKIES = {}
+    @staticmethod
+    def set_cookies(d: dict):
+        ContainerState.COOKIES = d
+
+set_cookies = ContainerState.set_cookies
+
 # function to convert python `dict` to json and then encode it to be passed in the url as a parameter
 # some urls require this format
 def dict_to_url(dct):
@@ -157,7 +165,7 @@ def ForceNewTorIdentity(config):
 
 async def Request(_url, connector=None, params=None, headers=None):
     logme.debug(__name__ + ':Request:Connector')
-    async with aiohttp.ClientSession(connector=connector, headers=headers) as session:
+    async with aiohttp.ClientSession(connector=connector, headers=headers, cookies=ContainerState.COOKIES) as session:
         return await Response(session, _url, params)
 
 
